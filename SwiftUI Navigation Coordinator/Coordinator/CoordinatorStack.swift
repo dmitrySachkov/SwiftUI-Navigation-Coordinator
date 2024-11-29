@@ -17,6 +17,7 @@ struct CoordinatorStack<CoordinatorPage: Coordinatable>: View {
     
     @State private var coordinator = Coordinator<CoordinatorPage>()
     @Environment(TabBarRouter.self) private var tabBarRouter
+    @Environment(AppState.self) private var appState
     
     var body: some View {
         NavigationStack(path: $coordinator.path) {
@@ -27,6 +28,7 @@ struct CoordinatorStack<CoordinatorPage: Coordinatable>: View {
         }
         .environment(coordinator)
         .environment(tabBarRouter)
+        .environment(appState)
     }
 }
 

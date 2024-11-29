@@ -11,6 +11,7 @@ struct LoginLast: View {
     
     @Environment(Coordinator<CatalogCoordinatorPages>.self) private var mainCoordinator
     @Environment(TabBarRouter.self) private var tabBarRouter
+    @Environment(AppState.self) private var appState
     
     var body: some View {
         VStack {
@@ -29,6 +30,15 @@ struct LoginLast: View {
                 tabBarRouter.pathToView = 1
             } label: {
                 Text("Go to Home second")
+            }
+            
+            Spacer()
+            
+            Button {
+                appState.appState = .firstEnter
+                tabBarRouter.selection = 0
+            } label: {
+                Text("Change root")
             }
         }
         .frame(height: 150)

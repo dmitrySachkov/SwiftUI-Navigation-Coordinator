@@ -6,13 +6,22 @@
 //
 
 import SwiftUI
+import Observation
 
-enum AppState {
-    case firstEnter
-    case login
-    case mainTab
-    case onboarding
+@Observable
+class AppState {
+    
+    var appState: AppStateRouter = .firstEnter
+    
+    enum AppStateRouter {
+        case firstEnter
+        case login
+        case mainTab
+        case onboarding
+    }
 }
+
+
 
 private struct OnCompleteFirstEnterKey: EnvironmentKey {
     static let defaultValue: () -> Void = {}
@@ -51,29 +60,34 @@ final class TabBarRouter {
 
 struct RootView: View {
     
-    @State private var appState: AppState = .firstEnter
+    @State private var appState: AppState = AppState()
     @State private var tabBarRouter = TabBarRouter()
     
     var body: some View {
         Group {
-            switch appState {
+            switch appState.appState {
             case .firstEnter:
                 CoordinatorStack(MainCoordinatorPages.firstEnter)
                     .environment(\.onCompleteFirstEnter, {
-                        appState = .mainTab
+                        appState.appState = .mainTab
                     })
                     .environment(tabBarRouter)
+                    .environment(appState)
             case .login:
                 CoordinatorStack(MainCoordinatorPages.login)
                     .environment(\.onCompleteLogIn, {
-                        appState = .mainTab
+                        appState.appState = .mainTab
                     })
                     .environment(tabBarRouter)
+                    .environment(appState)
             case .mainTab:
-                TabBar().environment(tabBarRouter)
+                TabBar()
+                    .environment(tabBarRouter)
+                    .environment(appState)
             case .onboarding:
                 CoordinatorStack(MainCoordinatorPages.firstEnter)
                     .environment(tabBarRouter)
+                    .environment(appState)
             }
         }
     }
@@ -83,17 +97,17 @@ struct RootView: View {
             do {
                 let fetchedState = try await getAppState()
                 DispatchQueue.main.async {
-                    appState = fetchedState
+                    appState.appState = fetchedState
                 }
             } catch {
                 DispatchQueue.main.async {
-                    appState = .login
+                    appState.appState = .login
                 }
             }
         }
     }
     
-    func getAppState() async throws -> AppState {
+    func getAppState() async throws -> AppState.AppStateRouter {
         
         try await Task.sleep(nanoseconds: 1_000_000_000)
         let backendState = "firstEnter"
