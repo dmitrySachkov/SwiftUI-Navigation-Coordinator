@@ -11,7 +11,7 @@ import SwiftUI
 struct SwiftUI_Navigation_CoordinatorApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
     }
 }

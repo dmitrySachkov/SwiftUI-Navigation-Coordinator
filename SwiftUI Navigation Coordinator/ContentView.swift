@@ -8,14 +8,16 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @AppStorage("isFirstEnter") private var isFirstEnter: Bool = false
+        @AppStorage("isLogin") private var isLogin: Bool = false
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if isFirstEnter {
+            
+        } else {
+            CoordinatorStack(MainCoordinatorPages.firstEnter)
         }
-        .padding()
     }
 }
 
